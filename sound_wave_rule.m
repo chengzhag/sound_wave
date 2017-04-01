@@ -1,5 +1,5 @@
 doPlot=false;%是否绘图
-allTime=5;
+allTime=10;
 
 %麦克风
 micTimeSample=0.035;%采样时间
@@ -11,14 +11,16 @@ waveFreOffset=0;
 wavePlay(waveFreAv,waveFreOffset,allTime);
 
 %规则参数
-ruleDownThres=0.6;
-ruleUpThres=0.5;
+% ruleThres=6;
+ruleThres=11;
 ruleFreCenterWidth=1;
-
 
 
 tic
 i=0;
+downSums=[];
+upSums=[];
+allSums=[];
 while toc<allTime
     vector=waveGet(micTimeSample,waveFreAv,doPlot);
     
@@ -27,12 +29,23 @@ while toc<allTime
     upVec=vector(1:freCenterIndex-ruleFreCenterWidth);
     
     %为距中心频率较远的增加权重
-    ruleDownShiftWeight=log((1:length(downVec))*10+1);
+%     ruleDownShiftWeight=log((1:length(downVec))*10+1);
+    ruleDownShiftWeight=(1:length(downVec))*1+0.5;
     downSum=sum(downVec.*ruleDownShiftWeight);
     ruleUpShiftWeight=fliplr(ruleDownShiftWeight);
     upSum=sum(upVec.*ruleUpShiftWeight);
     
-    if downSum>ruleDownThres || upSum>ruleUpThres
+    %绘制downSum、upSum
+    downSums=[downSums downSum];
+    upSums=[upSums upSum];
+    allSums=[allSums downSum+upSum];
+    plot(downSums);
+    hold on;
+    plot(upSums);
+    plot(allSums);
+    hold off;
+    
+    if downSum+upSum>ruleThres*vector(freCenterIndex)
         if downSum>upSum
             disp('down');
         else
