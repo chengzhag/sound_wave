@@ -1,10 +1,9 @@
 %% 录音指定时间，并在指定频率附近进行zoomFFT变换，返回频谱
 function vector=waveGet(micTimeSample,waveFreAv,doPlot)
 %麦克风
-micTimeSample=0.1;%采样时间
 micFreSample=44100;%采样率
 micFreRange=600;
-micPointsSample=2048;
+micPointsSample=1024;
 micRecorder = audiorecorder( micFreSample, 16 ,1 );%设置采样率、数据类型uint16、单声道
 
 recordblocking(micRecorder,micTimeSample);%录制音频

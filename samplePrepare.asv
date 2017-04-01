@@ -1,8 +1,26 @@
-vectorNum=20;
-fftDoPlot=true;
+vectorNum=2;%单次动作采集次数
+fftDoPlot=true;%是否绘图
+gestureTImes=1;%单个动作测试次数
 
-vectors=dopplerGet(vectorNum,fftDoPlot);
-imshow(vectors,[]);
+
+classNames={'sweepLeft' 'sweepRight' 'sweepUp' 'sweepDown'};
+samples=cell(length(classNames)*vectorNum*gestureTImes,2);
+index=1;
+for i=1:length(classNames)
+    fprintf('第%d个动作\n',i);
+    disp(classNames{i});
+    for j=1:gestureTImes
+        vectors=dopplerGet(vectorNum,fftDoPlot);
+        samples{index,1}=i;
+        samples{index,2}=vectors;
+        pause(1);
+        fprintf('第%d次测试\n',j);
+        index=index+1;
+    end
+end
+
+% vectors=log(vectors);
+% imshow(vectors,[]);
 
 %% 播放声波并分析频谱，返回指定数量的频谱向量
 function vectors=dopplerGet(vectorNum,doPlot)
@@ -12,9 +30,9 @@ micTimeSample=0.1;%采样时间
 %喇叭
 waveFreSample=44100; %采样频率
 waveFreAv=18000;
-waveFreOffset=0;
-wavePlay(waveFreAv,waveFreOffset,micTimeSample*vectorNum*1.8+0.25);
-pause(0.25);%等待扬声器稳定
+waveFreOffset=200;
+wavePlay(waveFreAv,waveFreOffset,micTimeSample*vectorNum*1.8+0.3);
+pause(0.3);%等待扬声器稳定
 
 %初始化储存频谱的矩阵
 vectors=cell(vectorNum,1);
@@ -22,8 +40,9 @@ for i=1:vectorNum
     vectors{i}=waveGet(micTimeSample,waveFreAv,doPlot);
 end
 vectors=cat(1,vectors{:});
-
 end
 
-%% 归一化特征向量
-function vectorNorm
+% %% 归一化特征向量,
+% function vectorsOut=vectorNormalize(vectorsIn)
+%     vectorsOut=vectorsIn/max(vectorsIn
+% end
