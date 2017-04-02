@@ -10,7 +10,7 @@ micTimeSample=0.06;%采样时间
 micFreRange=600;
 
 %喇叭
-waveFreSample=44100; %采样频率
+waveFreSample=48000; %采样频率
 waveFreAv=18000;
 waveFreOffset=0;
 wavePlay(waveFreAv,waveFreOffset,allTime);

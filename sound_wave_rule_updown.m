@@ -7,13 +7,13 @@ micTimeSample=0.06;%采样时间
 micFreRange=600;
 
 %喇叭
-waveFreSample=44100; %采样频率
+waveFreSample=48000; %采样频率
 waveFreAv=18000;
 waveFreOffset=0;
 wavePlay(waveFreAv,waveFreOffset,allTime);
 
 %规则参数
-ruleThres=7;
+ruleThres=6.5;
 ruleFreCenterWidth=1;
 
 
@@ -27,16 +27,16 @@ end
 while toc<allTime
     vector=waveGet(micTimeSample,waveFreAv,micFreRange,doFFTPlot);
     
-    freCenterIndex=ceil(length(vector)/2);
-    downVec=vector(freCenterIndex+ruleFreCenterWidth:end);
-    upVec=vector(1:freCenterIndex-ruleFreCenterWidth);
+    [freCenterAmp,freCenterIndex]=max(vector);
+    downVec=vector(freCenterIndex+ruleFreCenterWidth:end)-min(vector);
+    upVec=vector(1:(freCenterIndex-ruleFreCenterWidth))-min(vector);
     
     %为距中心频率较远的增加权重
     ruleDownShiftWeight=log((1:length(downVec))*2)+2;
 %     ruleDownShiftWeight=(1:length(downVec))*1+0.5;
-    downSum=sum(downVec.*ruleDownShiftWeight)/vector(freCenterIndex);
-    ruleUpShiftWeight=fliplr(ruleDownShiftWeight);
-    upSum=sum(upVec.*ruleUpShiftWeight)/vector(freCenterIndex);
+    downSum=sum(downVec.*ruleDownShiftWeight)/freCenterAmp;
+    ruleUpShiftWeight=log((length(upVec):-1:1)*2)+2;
+    upSum=sum(upVec.*ruleUpShiftWeight)/freCenterAmp;
     
     %绘制downSum、upSum
     if doSumAmpPlot && i>3

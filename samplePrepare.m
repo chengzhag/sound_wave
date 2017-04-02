@@ -32,7 +32,7 @@ function vectors=dopplerGet(vectorNum,doPlot)
 micTimeSample=0.1;%采样时间
 
 %喇叭
-waveFreSample=44100; %采样频率
+waveFreSample=48000; %采样频率
 waveFreAv=18500;
 waveFreOffset=0;
 wavePlay(waveFreAv,waveFreOffset,micTimeSample*vectorNum*1.8+0.3);
