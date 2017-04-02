@@ -6,6 +6,8 @@ waveFreRight=waveFreAv+waveFreOffset;%Êä³öÉù²¨ÆµÂÊ
 
 waveTimePoint=0: 1/waveFreSample: time;
 waveAmpPoint=sin(2*pi*waveFreLeft*waveTimePoint);
-waveAmpPoint(2,:)=sin(2*pi*waveFreRight*waveTimePoint);
+% waveAmpPoint(2,:)=sin(2*pi*waveFreRight*waveTimePoint);
 sound(waveAmpPoint, waveFreSample);
+% player = audioplayer(waveAmpPoint,waveFreSample);
+% play(player);
 end
